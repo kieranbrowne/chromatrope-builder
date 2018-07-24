@@ -59,8 +59,9 @@ function mult(a,b) {
     return a +"*"+ b;
 }
 
-const slides = { 
-    empty: "vec3(1.)",
-    // bar: "vec3(smoothstep(0.36,0.4,abs((rot2 * p).y)))"
-    bar: "vec3((rot1* st.x)/6.2831 + .5)"
-};
+const slides = { empty: "vec3(1.)" };
+// bar: "vec3(smoothstep(0.36,0.4,abs((rot2 * p).y)))"
+slides.bar = "vec3(atan((rot1*uv).x,(rot1*uv).y))";
+slides.bar = "("+slides.bar+".x/6.2831+.5)*7.";
+slides.bar = "min(fract("+slides.bar+"), fract(1.-"+slides.bar+"))";
+slides.bar = "smoothstep(0.,.1, "+slides.bar+"*.3+.2 - length(uv))";
