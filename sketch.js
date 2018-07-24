@@ -4,8 +4,8 @@ function setup() {
     shad = createShader(
             vert(),
             frag(lantern(
-                    mult(slides.empty,
-                         slides.bar))));
+                    mult(slides.flower2,
+                         slides.flower1))));
 
     shader(shad);
     shad.setUniform("ratio", width/height);
@@ -56,12 +56,13 @@ function rot(deg) {
 }
 
 function mult(a,b) {
-    return a +"*"+ b;
+    return a("rot1") +"*"+ b("rot2");
 }
 
-const slides = { empty: "vec3(1.)" };
+const slides = { empty: () => "vec3(1.)" };
 // bar: "vec3(smoothstep(0.36,0.4,abs((rot2 * p).y)))"
-slides.bar = "vec3(atan((rot1*uv).x,(rot1*uv).y))";
-slides.bar = "("+slides.bar+".x/6.2831+.5)*7.";
-slides.bar = "min(fract("+slides.bar+"), fract(1.-"+slides.bar+"))";
-slides.bar = "smoothstep(0.,.1, "+slides.bar+"*.3+.2 - length(uv))";
+slides.st = (d) => "vec2(atan(("+d+"*uv).x,("+d+"*uv).y), length(uv))";
+slides.bar = (d) => "("+slides.st(d)+".x/6.2831+.5)*7. + "+ slides.st(d)+".y";
+slides.zigzag = (d) => "min(fract("+slides.bar(d)+"), fract(1.-"+slides.bar(d)+"))";
+slides.flower1 = (d) => "smoothstep(0.,.1, "+slides.zigzag(d)+"*1.9+.3 - length(uv))";
+slides.flower2 = (d) => "smoothstep(0.,.1, "+slides.zigzag(d)+"*1.2+.3 - length(uv))";
