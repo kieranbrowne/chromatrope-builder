@@ -1,10 +1,8 @@
 function setup() {
-    createCanvas(windowWidth, windowHeight, WEBGL);
-
-    shad = createShader(
+    createCanvas(windowWidth, windowHeight, WEBGL); shad = createShader(
             vert(),
             frag(lantern(
-                    mult(slides.flower2,
+                    mult(slides.flower0,
                          slides.flower1))));
 
     shader(shad);
@@ -15,7 +13,7 @@ function setup() {
 }
 
 function draw() {
-    shad.setUniform("uTime", millis()/1000.);
+    shad.setUniform("uTime", millis()/4000.);
     // quad(-1,-1,1,-1,1,1,-1,1);
     quad(-1, -1, 1, -1, 1, 1, -1, 1);
 }
@@ -62,7 +60,13 @@ function mult(a,b) {
 const slides = { empty: () => "vec3(1.)" };
 // bar: "vec3(smoothstep(0.36,0.4,abs((rot2 * p).y)))"
 slides.st = (d) => "vec2(atan(("+d+"*uv).x,("+d+"*uv).y), length(uv))";
-slides.bar = (d) => "("+slides.st(d)+".x/6.2831+.5)*7. + "+ slides.st(d)+".y";
+
+slides.bar = (d) => "(length(uv)+"+slides.st(d)+".x/6.2831+.5)*5.";
+slides.bar2 = (d) => "(-length(uv)+"+slides.st(d)+".x/6.2831+.5)*5.-length(uv)";
+
 slides.zigzag = (d) => "min(fract("+slides.bar(d)+"), fract(1.-"+slides.bar(d)+"))";
-slides.flower1 = (d) => "smoothstep(0.,.1, "+slides.zigzag(d)+"*1.9+.3 - length(uv))";
+slides.zigzag2 = (d) => "min(fract("+slides.bar2(d)+"), fract(1.-"+slides.bar(d)+"))";
+slides.flower0 = (d) => "smoothstep(0.,.013, "+slides.zigzag(d)+"*1.2+.2 - length(uv))";
+slides.flower1 = (d) => "smoothstep(0.,.2, "+slides.zigzag2(d)+"*1.9+.3 - length(uv))";
 slides.flower2 = (d) => "smoothstep(0.,.1, "+slides.zigzag(d)+"*1.2+.3 - length(uv))";
+slides.flower3 = (d) => "max("+slides.flower1(d)+ "," +slides.flower2(d)+")";
