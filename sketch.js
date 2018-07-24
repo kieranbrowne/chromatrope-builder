@@ -3,7 +3,7 @@ function setup() {
 
     shad = createShader(
             vert(),
-            frag("vec3(smoothstep(1.,0.97,distance(p,vec2(0,0))));"));
+            frag(lantern()));
     shader(shad);
     shad.setUniform("ratio", width/height);
 }
@@ -33,4 +33,11 @@ function vert(content) {
       "void main(){" +
       "  vPos = (gl_Position = vec4(aPosition, 1.0)).xy;" +
       "}";
+}
+
+function lantern(slide="vec3(1.)") {
+    return "min(" +
+        "vec3(smoothstep(1.,0.97,distance(p,vec2(0,0))))," +
+        slide +
+        ");"
 }
