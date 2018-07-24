@@ -2,7 +2,7 @@ function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL); shad = createShader(
             vert(),
             frag(lantern(
-                    mult(slides.flower0,
+                    mult(slides.flower1,
                          slides.flower1))));
 
     shader(shad);
@@ -62,7 +62,7 @@ const slides = { empty: () => "vec3(1.)" };
 slides.st = (d) => "vec2(atan(("+d+"*uv).x,("+d+"*uv).y), length(uv))";
 
 slides.bar = (d) => "(length(uv)+"+slides.st(d)+".x/6.2831+.5)*5.";
-slides.bar2 = (d) => "(-length(uv)+"+slides.st(d)+".x/6.2831+.5)*5.-length(uv)";
+slides.bar2 = (d) => "(-length(uv)+"+slides.st(d)+".x/6.2831+.5)*9.-length(uv)";
 
 slides.zigzag = (d) => "min(fract("+slides.bar(d)+"), fract(1.-"+slides.bar(d)+"))";
 slides.zigzag2 = (d) => "min(fract("+slides.bar2(d)+"), fract(1.-"+slides.bar(d)+"))";
