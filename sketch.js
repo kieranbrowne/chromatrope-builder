@@ -135,3 +135,13 @@ slides.flower0 = (d) => "smoothstep(0.,.013, "+slides.zigzag(d)+"*1.2+.2 - lengt
 slides.flower1 = (d) => "smoothstep(0.24,.3, "+slides.zigzag2(d)+"*1.2+.2 - length(uv))";
 slides.flower2 = (d) => "smoothstep(0.,.1, "+slides.zigzag(d)+"*1.2+.3 - length(uv))";
 slides.flower3 = (d) => "max("+slides.flower1(d)+ "," +slides.flower2(d)+")";
+
+function keyTyped() {
+    if(key == " ") {
+        arms1.value(random(1,20))
+        arms2.value(random(1,20))
+        twist1.value(random(-2,2))
+        twist2.value(random(-2,2))
+    }
+    updateShader();
+}
