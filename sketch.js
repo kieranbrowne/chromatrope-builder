@@ -1,5 +1,8 @@
+var twist1, twist2, arms1, arms2;
 function setup() {
-    createCanvas(windowWidth, windowHeight, WEBGL); shad = createShader(
+    createCanvas(windowWidth, windowHeight, WEBGL); 
+
+    shad = createShader(
             vert(),
             frag(lantern(
                     mult(slides.flower1,
@@ -10,18 +13,53 @@ function setup() {
     // slide 1 rotation matrix
     shad.setUniform("rot1", rot(0)); // id matrix
     frameRate(30);
+
+    // ui
+    let lm = 40;
+    createSpan('arms')
+        .position(lm,36);
+    arms1 = createSlider(1, 20, 6)
+        .position(lm,40)
+        .input(updateShader);
+    arms2 = createSlider(1, 20, 8)
+        .position(lm,60)
+        .input(updateShader);
+    createSpan('twist')
+        .position(lm,96);
+    twist1 = createSlider(-2, 2, 1, 0.1)
+        .position(lm,100)
+        .input(updateShader);
+    twist2 = createSlider(-2, 2, 1, 0.1)
+        .position(lm,120)
+        .input(updateShader);
+
+    updateShader();
+}
+
+function updateShader() {
+    shad.setUniform("uTwist1", twist1.value());
+    shad.setUniform("uTwist2", twist2.value());
+    shad.setUniform("uArms1", arms1.value());
+    shad.setUniform("uArms2", arms2.value());
 }
 
 function draw() {
-    shad.setUniform("uTime", millis()/4000.);
-    // quad(-1,-1,1,-1,1,1,-1,1);
+    // shad.setUniform("uTime", millis()/4000.);
+    shad.setUniform("uTime", frameCount / 120.);
     quad(-1, -1, 1, -1, 1, 1, -1, 1);
+
+    // if(frameCount < 300)
+    //     saveCanvas('frame'+nf(frameCount,5, 0), 'png');
 }
 
 function frag(colour) {
   return "precision highp float;" +
       "varying vec2 vPos;" +
       "uniform float uTime;" +
+      "uniform float uTwist1;" +
+      "uniform float uTwist2;" +
+      "uniform float uArms1;" +
+      "uniform float uArms2;" +
       "uniform float ratio;" +
       "mat2 rot1 = mat2(cos(uTime),sin(uTime),-sin(uTime),cos(uTime));" +
       "mat2 rot2 = mat2(cos(-uTime),sin(-uTime),-sin(-uTime),cos(-uTime));" +
@@ -61,12 +99,12 @@ const slides = { empty: () => "vec3(1.)" };
 // bar: "vec3(smoothstep(0.36,0.4,abs((rot2 * p).y)))"
 slides.st = (d) => "vec2(atan(("+d+"*uv).x,("+d+"*uv).y), length(uv))";
 
-slides.bar = (d) => "(length(uv)+"+slides.st(d)+".x/6.2831+.5)*5.";
-slides.bar2 = (d) => "(-length(uv)+"+slides.st(d)+".x/6.2831+.5)*9.-length(uv)";
+slides.bar = (d) => "(length(uv)*uTwist1+"+slides.st(d)+".x/6.2831+.5)*uArms1";
+slides.bar2 = (d) => "(-length(uv)*uTwist2+"+slides.st(d)+".x/6.2831+.5)*uArms2";
 
 slides.zigzag = (d) => "min(fract("+slides.bar(d)+"), fract(1.-"+slides.bar(d)+"))";
 slides.zigzag2 = (d) => "min(fract("+slides.bar2(d)+"), fract(1.-"+slides.bar(d)+"))";
 slides.flower0 = (d) => "smoothstep(0.,.013, "+slides.zigzag(d)+"*1.2+.2 - length(uv))";
-slides.flower1 = (d) => "smoothstep(0.,.2, "+slides.zigzag2(d)+"*1.9+.3 - length(uv))";
+slides.flower1 = (d) => "smoothstep(0.24,.3, "+slides.zigzag2(d)+"*1.2+.2 - length(uv))";
 slides.flower2 = (d) => "smoothstep(0.,.1, "+slides.zigzag(d)+"*1.2+.3 - length(uv))";
 slides.flower3 = (d) => "max("+slides.flower1(d)+ "," +slides.flower2(d)+")";
