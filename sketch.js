@@ -16,20 +16,25 @@ function setup() {
 
     // ui
     let lm = 40;
+    let get = getURLParams();
     createSpan('arms')
         .position(lm,36);
-    arms1 = createSlider(1, 20, random(1,20))
+    arms1 = createSlider(1, 20, 
+            (get.arms1?parseInt(get.arms1):random(1,20)))
         .position(lm,40)
         .input(updateShader);
-    arms2 = createSlider(1, 20, random(1,20))
+    arms2 = createSlider(1, 20, 
+            (get.arms2?parseInt(get.arms2):random(1,20)))
         .position(lm,60)
         .input(updateShader);
     createSpan('twist')
         .position(lm,96);
-    twist1 = createSlider(-2, 2, random(-2,2), 0.1)
+    twist1 = createSlider(-2, 2, 
+            (get.twist1?parseFloat(get.twist1):random(-2,2)), 0.1)
         .position(lm,100)
         .input(updateShader);
-    twist2 = createSlider(-2, 2, random(-2,2), 0.1)
+    twist2 = createSlider(-2, 2, 
+            (get.twist2?parseFloat(get.twist2):random(-2,2)), 0.1)
         .position(lm,120)
         .input(updateShader);
 
@@ -50,6 +55,17 @@ function updateShader() {
     shad.setUniform("uArms2", arms2.value());
     shad.setUniform("uSlide1", slide1.checked());
     shad.setUniform("uSlide2", slide2.checked());
+
+
+    history.replaceState("","",
+            "?"+Object.entries({
+                "twist1": twist1.value(),
+                "twist2": twist2.value(),
+                "arms1": arms1.value(),
+                "arms2": arms2.value()
+            }).map(([k,v]) => k+"="+v).join("&"))
+    
+
 }
 
 function draw() {
