@@ -1,4 +1,4 @@
-var twist1, twist2, arms1, arms2;
+var twist1, twist2, arms1, arms2, slide1, slide2;
 function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL); 
 
@@ -33,6 +33,13 @@ function setup() {
         .position(lm,120)
         .input(updateShader);
 
+    slide1 = createCheckbox('slide 1', true)
+        .position(lm, 160)
+        .input(updateShader);
+    slide2 = createCheckbox('slide 2', true)
+        .position(lm, 180)
+        .input(updateShader);
+
     updateShader();
 }
 
@@ -41,6 +48,8 @@ function updateShader() {
     shad.setUniform("uTwist2", twist2.value());
     shad.setUniform("uArms1", arms1.value());
     shad.setUniform("uArms2", arms2.value());
+    shad.setUniform("uSlide1", slide1.checked());
+    shad.setUniform("uSlide2", slide2.checked());
 }
 
 function draw() {
@@ -60,6 +69,8 @@ function frag(colour) {
       "uniform float uTwist2;" +
       "uniform float uArms1;" +
       "uniform float uArms2;" +
+      "uniform bool  uSlide1;" +
+      "uniform bool  uSlide2;" +
       "uniform float ratio;" +
       "mat2 rot1 = mat2(cos(uTime),sin(uTime),-sin(uTime),cos(uTime));" +
       "mat2 rot2 = mat2(cos(-uTime),sin(-uTime),-sin(-uTime),cos(-uTime));" +
@@ -92,7 +103,7 @@ function rot(deg) {
 }
 
 function mult(a,b) {
-    return a("rot1") +"*"+ b("rot2");
+    return "(uSlide1?"+a("rot1")+":1.)" +"*(uSlide2?"+ b("rot2")+":1.)";
 }
 
 const slides = { empty: () => "vec3(1.)" };
