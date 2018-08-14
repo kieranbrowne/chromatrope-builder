@@ -132,8 +132,8 @@ slides.bar2 = (d) => "(-length(uv)*uTwist2+"+slides.st(d)+".x/6.2831+.5)*uArms2"
 
 slides.zigzag = (d) => "min(fract("+slides.bar2(d)+"), fract(1.-"+slides.bar(d)+"))";
 slides.zigzag2 = (d) => "min(fract("+slides.bar2(d)+"), fract(1.-"+slides.bar(d)+"))";
-slides.flower0 = (d) => "smoothstep(0.,.013, "+slides.zigzag(d)+"*1.2+.1 - length(uv))";
-slides.flower1 = (d) => "smoothstep(0.,.013, "+slides.zigzag2(d)+"*1.2+.1 - length(uv))";
+slides.flower0 = (d) => "smoothstep(0.,.013, "+slides.zigzag(d)+"*1.2-.2 - length(uv))";
+slides.flower1 = (d) => "smoothstep(0.,.013, "+slides.zigzag2(d)+"*1.2-.2 - length(uv))";
 slides.flower2 = (d) => "smoothstep(0.,.1, "+slides.zigzag(d)+"*1.2+.3 - length(uv))";
 slides.flower3 = (d) => "max("+slides.flower1(d)+ "," +slides.flower2(d)+")";
 
