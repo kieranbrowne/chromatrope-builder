@@ -95,6 +95,7 @@ function frag(colour) {
       "  uv.x *= ratio;" +
       "  vec2 st = vec2(atan(uv.x,uv.y), length(uv));" +
       "  vec3 colour = " + colour +
+      "  colour -= vec3(0.,1.,1.)*vec3(smoothstep(0.01,0.0,length(uv)));"+
       "  gl_FragColor = vec4(colour,1.);" +
       "}";
 }
@@ -129,10 +130,10 @@ slides.st = (d) => "vec2(atan(("+d+"*uv).x,("+d+"*uv).y), length(uv))";
 slides.bar = (d) => "(length(uv)*uTwist1+"+slides.st(d)+".x/6.2831+.5)*uArms1";
 slides.bar2 = (d) => "(-length(uv)*uTwist2+"+slides.st(d)+".x/6.2831+.5)*uArms2";
 
-slides.zigzag = (d) => "min(fract("+slides.bar(d)+"), fract(1.-"+slides.bar(d)+"))";
+slides.zigzag = (d) => "min(fract("+slides.bar2(d)+"), fract(1.-"+slides.bar(d)+"))";
 slides.zigzag2 = (d) => "min(fract("+slides.bar2(d)+"), fract(1.-"+slides.bar(d)+"))";
-slides.flower0 = (d) => "smoothstep(0.,.013, "+slides.zigzag(d)+"*1.2+.2 - length(uv))";
-slides.flower1 = (d) => "smoothstep(0.24,.3, "+slides.zigzag2(d)+"*1.2+.2 - length(uv))";
+slides.flower0 = (d) => "smoothstep(0.,.013, "+slides.zigzag(d)+"*1.2+.1 - length(uv))";
+slides.flower1 = (d) => "smoothstep(0.,.013, "+slides.zigzag2(d)+"*1.2+.1 - length(uv))";
 slides.flower2 = (d) => "smoothstep(0.,.1, "+slides.zigzag(d)+"*1.2+.3 - length(uv))";
 slides.flower3 = (d) => "max("+slides.flower1(d)+ "," +slides.flower2(d)+")";
 
